@@ -12,6 +12,20 @@ function createBalloonArray() {
            [1, 1, 1, 0, 0, 1, 0, 1, 0, 0] ]
 }
 
+function createDisplayArray() {
+  //Create and return a grid array
+  return [ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ]
+}
+
 function createDivGrid(grid) {
   for(let row = 0; row < NUM_ROWS; row++) {
     for(let col = 0; col < NUM_COLS; col++) {
@@ -21,10 +35,8 @@ function createDivGrid(grid) {
       // Add Appropriate Class
       if(grid[row][col] == 1) {
         divEl.classList.add("grey");
-      } else if(grid[row][col] == 2) {
-        divEl.classList.add("player");
       }
-
+        
       // Add dataset values for row and col
       divEl.dataset.row = row;
       divEl.dataset.col = col;
@@ -52,7 +64,13 @@ function cellClicked(event) {
     console.log("game over!");
   } else {
     console.log("safe....");
-    console.log(checkAroundCell(row, col));
+    let balloonsAdj = checkAroundCell(row, col);
+    console.log(balloonsAdj);
+    if(balloonsAdj == 0) {
+      // Logic for empty square
+    } else {
+      event.target.innerHTML = balloonsAdj;
+    }
   }
 
 

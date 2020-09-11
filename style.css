@@ -8,6 +8,11 @@
   height: 48px;
   border: 1px solid black;
   float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Comic Sans MS", sans-serif;
+  font-size: 25px;
 }
 
 .grey {
