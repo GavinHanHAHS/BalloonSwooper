@@ -87,7 +87,6 @@ function checkAroundCell(row, col) {
   if(grid[row][col + 1] == 1) {
     num++;
   }
-  
   if(grid[row + 1][col - 1] == 1) {
     num++;
   }/*
