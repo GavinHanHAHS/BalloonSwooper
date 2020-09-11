@@ -6,7 +6,7 @@ const NUM_COLS = 10;
 
 
 // Create an array to represent grid
-let grid = createGridArray();
+let grid = createBalloonArray();
 
 
 // Create divs to model the grid array

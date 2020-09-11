@@ -1,4 +1,4 @@
-function createGridArray() {
+function createBalloonArray() {
   // Create and return a grid array
   return [ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -43,8 +43,8 @@ function cellClicked(event) {
   //console.log(event.which);
 
   // Get row and col of the clicked cell
-  let row = event.target.dataset.row;
-  let col = event.target.dataset.col;
+  let row = +event.target.dataset.row;
+  let col = +event.target.dataset.col;
 
 
   // Check if there's a balloon
@@ -72,30 +72,44 @@ function cellClicked(event) {
 function checkAroundCell(row, col) {
   let num = 0;
 
-  if(grid[row - 1][col - 1] == 1) {
-    num++;
+  // Top Row
+  if(row != 0) {
+    if(grid[row - 1][col - 1] == 1) {
+      num++;
+    }
+    if(grid[row - 1][col] == 1) {
+      num++;
+    }
+    if(grid[row - 1][col + 1] == 1) {
+      num++;
+    }
   }
-  if(grid[row - 1][col] == 1) {
-    num++;
+  
+  // Middle Row (minus center)
+  if(col != 0) {
+    if(grid[row][col - 1] == 1) {
+      num++;
+    }
   }
-  if(grid[row - 1][col + 1] == 1) {
-    num++;
+  if(col != 9) {
+    if(grid[row][col + 1] == 1) {
+      num++;
+    }
   }
-  if(grid[row][col - 1] == 1) {
-    num++;
+
+  // Bottom Row
+  if(row != 9) {
+    if(grid[row + 1][col - 1] == 1) {
+      num++;
+    }
+    if(grid[row + 1][col] == 1) {
+      num++;
+    }
+    if(grid[row + 1][col + 1] == 1) {
+      num++;
+    }
   }
-  if(grid[row][col + 1] == 1) {
-    num++;
-  }
-  if(grid[row + 1][col - 1] == 1) {
-    num++;
-  }/*
-  if(grid[row + 1][col] == 1) {
-    num++;
-  }
-  if(grid[row + 1][col + 1] == 1) {
-    num++;
-  }
-*/
+  
+
   return num;
 }
