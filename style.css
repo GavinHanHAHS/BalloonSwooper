@@ -15,10 +15,10 @@
   font-size: 25px;
 }
 
-.grey {
-  background-color: grey;
+.bomb {
+  background-color: palevioletred;
 }
 
-.player {
-  background-color: black;
+.hidden {
+  background-color: gray;
 }
