@@ -79,6 +79,15 @@ function cellClicked(event) {
 
   // Check if there's a balloon
   if(grid[row][col] == 1) {
+    if(firstClick) {
+      firstClick = false;
+      grid[row][col] == 0;
+      if(grid[0][0] == 0) {
+        grid[0][0] = 1;
+      } else {
+        // take away one bomb from count
+      }
+    } 
     console.log("game over!");
     for(let n = 0; n < grid.length; n++) {
       for(let i = 0; i < grid[row].length; i++) {
@@ -99,10 +108,7 @@ function cellClicked(event) {
     console.log("safe....");
     revealCell(row, col);
     let balloonsAdj = checkAroundCell(row, col);
-    if(balloonsAdj == 0) {
-      // Logic for empty square
-      
-    } else {
+    if(balloonsAdj != 0) {
       event.target.innerHTML = balloonsAdj;
     }
   }
@@ -119,13 +125,18 @@ function cellClicked(event) {
     // Empty cell is white;
   }
 */
-  } else if(event.which == 3) {
-    img = document.createElement("img");
-    img.src = "flag.png";
-    img.height = "40";
-    src = event.target.appendChild(img);
+  } else if(event.which == 3) { // Right Click
+    if(event.target.nodeName == "IMG") { // Check if image is clicked
+      event.target.parentElement.innerHTML = ""; // clear cell
+    } else {
+      if(event.target.classList.contains("hidden")) { // check if it's an uncleared cell
+        img = document.createElement("img"); // Add flag
+        img.src = "flag.png";
+        img.height = "40";
+        src = event.target.appendChild(img);
+      }
+    }
   }
-  
 }
 
 function revealCell(row, col) {

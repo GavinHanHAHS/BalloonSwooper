@@ -22,3 +22,7 @@
 .hidden {
   background-color: gray;
 }
+
+button {
+  margin: 12px;
+}
