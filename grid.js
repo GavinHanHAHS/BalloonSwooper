@@ -4,18 +4,34 @@ function createBalloonArray() {
   let grid = []
   let grid2 = []
 
+  let mineNum = 0;
+
+  // Generate grid row by row
   for(let n = 0; n < NUM_ROWS; n++) {
-    for(let i = 0; i < NUM_COLS; i++) {
+    for(let i = 0; i < NUM_COLS; i++) { // Generate one row of field
       let rand = Math.random();
-      if(rand > 0.9) {
-        grid.push(1);
+      if(rand > 0.9) { // Random Chance for bomb
+        grid.push(1); // If n% then generate bomb
       } else {
         grid.push(0);
       }
     }
-    grid2.push(grid);
-    grid = [];
+    grid2.push(grid); // Push row into "Full Grid" and start generating next row
+    grid = []; // Empty row for new row generation
   }
+
+
+  // Count no. of mines in Grid
+  for(let n = 0; n < NUM_ROWS; n++) {
+    for(let i = 0; i < NUM_COLS; i++) {
+      if(grid2[n][i] == 1) { // If 2d Array at row n, col i
+        mineNum++; // Add one mine to no. of mines
+        totalMines++;
+      }
+    }
+  }
+
+  document.getElementById("mineNum").innerHTML = mineNum;
   
 
   console.log(grid2);
@@ -79,25 +95,43 @@ function cellClicked(event) {
 
   // Check if there's a balloon
   if(grid[row][col] == 1) {
-    if(firstClick) {
-      firstClick = false;
-      grid[row][col] == 0;
-      if(grid[0][0] == 0) {
+/*    if(firstClick) { // if it's the first click and you hit a bomb
+      firstClick = false; // set it to not be firstClick
+      grid[row][col] = 0; // set it to not be bomb
+      if(grid[0][0] == 0) { // move to top left if clear
         grid[0][0] = 1;
-      } else {
+      } else { // if top left not clear
         // take away one bomb from count
+        let num = +document.getElementById("mineNum").innerHTML;
+        num--;
+        document.getElementById("mineNum").innerHTML = num;
       }
-    } 
+    } */ // too complicated :/
     console.log("game over!");
+    document.getElementById("winText").innerHTML = " || GAME OVER."
     for(let n = 0; n < grid.length; n++) {
       for(let i = 0; i < grid[row].length; i++) {
         // should probably add check for if item has class hidden
-        // removes "hidden" class from every cell
-        document.getElementById("cell" + n + "-" + i).classList.remove("hidden");
+        // removes "hidden" class from every cell not flagged
+        if(document.getElementById("cell" + n + "-" + i).hasChildNodes()) {
+          if(grid[n][i] == 1) {
+            //skip
+          } else {
+            console.log(document.getElementById("cell" + n + "-" + i).childNodes);
+            if(document.getElementById("cell" + n + "-" + i).childNodes[0].nodeName == "IMG") {
+              console.log("yeet");
+              document.getElementById("cell" + n + "-" + i).classList.add("blue");
+            }
+          }
+          // could probably reverse the if statement but i really do not want to rn
+        } else {
+          document.getElementById("cell" + n + "-" + i).classList.remove("hidden");
+        }
+        
         if(grid[n][i] == 1) {
           console.log("boom");
         } else if(grid[n][i] == 0) {
-          // if there is a number, then put the number there
+          // if there is a number, then put the number there 
           if(checkAroundCell(n, i) != 0) {
             document.getElementById("cell" + n + "-" + i).innerHTML = checkAroundCell(n, i);
           }
@@ -105,6 +139,9 @@ function cellClicked(event) {
       }
     }
   } else {
+    if(firstClick) {
+      firstClick = false;
+    }
     console.log("safe....");
     revealCell(row, col);
     let balloonsAdj = checkAroundCell(row, col);
@@ -128,13 +165,21 @@ function cellClicked(event) {
   } else if(event.which == 3) { // Right Click
     if(event.target.nodeName == "IMG") { // Check if image is clicked
       event.target.parentElement.innerHTML = ""; // clear cell
+      document.getElementById("mineNum").innerHTML = +document.getElementById("mineNum").innerHTML + 1
+      // ^ adds one to mine count
     } else {
       if(event.target.classList.contains("hidden")) { // check if it's an uncleared cell
+        document.getElementById("mineNum").innerHTML = +document.getElementById("mineNum").innerHTML - 1
+        // ^ minus one mine count
         img = document.createElement("img"); // Add flag
         img.src = "flag.png";
         img.height = "40";
         src = event.target.appendChild(img);
       }
+    }
+
+    if(document.getElementById("mineNum").innerHTML == "0") {
+      checkWin();
     }
   }
 }
@@ -157,14 +202,14 @@ function revealCell(row, col) {
       if(document.getElementById("cell" + (row - 1) + "-" + col).classList.contains("hidden")) {
         revealCell(row - 1, col); // up
       }
-      if(col != 9) {
+      if(col != NUM_COLS - 1) {
         if(document.getElementById("cell" + (row - 1) + "-" + (col + 1)).classList.contains("hidden")) {
           revealCell(row - 1, col + 1); // up right
         }
       }
     }
     
-    if(row != 9) {
+    if(row != NUM_ROWS - 1) {
       if(col != 0) {
         if(document.getElementById("cell" + (row + 1) + "-" + (col - 1)).classList.contains("hidden")) {
           revealCell(row + 1, col - 1); // down left
@@ -173,7 +218,7 @@ function revealCell(row, col) {
       if(document.getElementById("cell" + (row + 1) + "-" + col).classList.contains("hidden")) {
         revealCell(row + 1, col); // down
       }
-      if(col != 9) {
+      if(col != NUM_COLS - 1) {
         if(document.getElementById("cell" + (row + 1) + "-" + (col + 1)).classList.contains("hidden")) {
           revealCell(row + 1, col + 1); // down right
         }
@@ -185,7 +230,7 @@ function revealCell(row, col) {
         revealCell(row, col - 1); // left
       }
     }
-    if(col != 9) {
+    if(col != NUM_COLS - 1) {
       if(document.getElementById("cell" + row + "-" + (col + 1)).classList.contains("hidden")) {
         revealCell(row, col + 1); // right
       }
@@ -223,14 +268,14 @@ function checkAroundCell(row, col) {
       num++;
     }
   }
-  if(col != 9) {
+  if(col != NUM_COLS - 1) {
     if(grid[row][col + 1] == 1) {
       num++;
     }
   }
 
   // Bottom Row
-  if(row != 9) {
+  if(row != NUM_ROWS - 1) {
     if(grid[row + 1][col - 1] == 1) {
       num++;
     }
@@ -244,4 +289,28 @@ function checkAroundCell(row, col) {
   
 
   return num;
+}
+
+function checkWin() {
+  let total = 0; // no of bombs counted
+
+  for(let n = 0; n < NUM_ROWS; n++) {
+    for(let i = 0; i < NUM_COLS; i++) {
+      if(grid[n][i] == 1 && document.getElementById("cell" + n + "-" + i).hasChildNodes()) {
+        total++; // add one bomb to total if there's a bomb
+      }
+    }
+  }
+
+  if(total == totalMines) { // if bombs matches the total you win
+    // change gamestate to win
+    document.getElementById("winText").innerHTML = " || YOU WIN!!!!!"
+    for(let n = 0; n < NUM_ROWS; n++) {
+      for(let i = 0; i < NUM_COLS; i++) {
+        if(grid[n][i] != 1) {
+          revealCell(n, i);
+        }
+      }
+    }
+  }
 }

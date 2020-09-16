@@ -23,6 +23,15 @@
   background-color: gray;
 }
 
+.blue {
+  background-color: lightblue;
+}
+
 button {
   margin: 12px;
+}
+
+input {
+  width: 20px;
+  margin: 0px 10px;
 }

@@ -14,8 +14,10 @@
 <body>
   <!--Body Stuff Idk-->
   <div id="main">
-    <h1>BalloonSwooper</h1>
+    <h1>BalloonSwooper <span id="winText"></span></h1>
+    <p>Mines: <span id="mineNum"></span></p>
 
+    <input type="text" id="row" value="10"><input type="text" id="col" value="10">
     <button type="button" id="new">New Grid</button>
 
     <div id="grid" oncontextmenu="return false;"></div>
